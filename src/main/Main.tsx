@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import WebFontLoader from 'webfontloader';
 import Navigation from './navigation/Navigation';
 import TopBar from './top-bar/TopBar';
@@ -48,14 +48,20 @@ const Exercises: NavigationItem[] = [
     ],
   },
 ];
+
 const Main = () => {
   return (
     <Router>
       <GlobalStyle />
       <TopBar />
       <ContentWrapper>
-        <Navigation exercises={Exercises} />
-        <ExercisesContainer />
+        <Switch>
+          <Route path='/exercises/:exerciseId'>
+            <Navigation exercises={Exercises} />
+            <ExercisesContainer />
+          </Route>
+          <Redirect to='/exercises/1.1' />
+        </Switch>
       </ContentWrapper>
     </Router>
   );
