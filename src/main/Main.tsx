@@ -13,6 +13,11 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Hind', sans-serif;
     margin: 0;
   }
+
+  code {
+    background: rgb(230,230,230);
+    padding: 2px 4px;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -21,31 +26,19 @@ const ContentWrapper = styled.div`
 
 const Exercises: NavigationItem[] = [
   {
-    name: 'Basics',
-    children: [
-      {
-        name: 'XPath Basics',
-      },
-    ],
+    name: 'Introduction',
   },
   {
-    name: 'Selectors',
-    children: [
-      {
-        name: 'Select Something',
-      },
-      {
-        name: 'Select Something useful',
-        children: [
-          {
-            name: 'Select Something',
-          },
-          {
-            name: 'Select Something useful',
-          },
-        ],
-      },
-    ],
+    name: 'How does a selector work?',
+  },
+  {
+    name: 'Selecting using an attribute',
+  },
+  {
+    name: 'Last two lessons combined',
+  },
+  {
+    name: 'Relative select vs absolute select',
   },
 ];
 
@@ -60,7 +53,7 @@ const Main = () => {
             <Navigation exercises={Exercises} />
             <ExercisesContainer />
           </Route>
-          <Redirect to='/exercises/1.1' />
+          <Redirect to='/exercises/1' />
         </Switch>
       </ContentWrapper>
     </Router>

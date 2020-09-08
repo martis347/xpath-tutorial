@@ -10,7 +10,7 @@ const ExercisesContainer = () => {
 
   useEffect(() => {
     if (!Exercise) {
-      history.push(`/exercises/1.1`);
+      history.push(`/exercises/1`);
     }
   }, [Exercise, history]);
 
@@ -18,7 +18,11 @@ const ExercisesContainer = () => {
     return null;
   }
 
-  return <Exercise />;
+  return (
+    <div style={{ flex: 4 }}>
+      <Exercise />
+    </div>
+  );
 };
 
 export default ExercisesContainer;

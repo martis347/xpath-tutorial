@@ -8,6 +8,7 @@ const StyledWrapper = styled.div`
   height: calc(100vh - 81px);
   border-right: 1px solid lightgray;
   padding: 8px;
+  flex: 1;
 `;
 
 // eslint-disable-next-line no-undef
@@ -34,7 +35,8 @@ const Navigation = ({ exercises }: { exercises: NavigationItem[] }) => {
 
   const renderExercises = useCallback(
     (exercise: NavigationItem, index: number, parentIndexes: number[] = []): React.ReactChild => {
-      const id = `${parentIndexes.join('.')}.${index + 1}`;
+      const id =
+        parentIndexes.length === 0 ? `${index + 1}` : `${parentIndexes.join('.')}.${index + 1}`;
 
       if ('children' in exercise && Array.isArray(exercise.children)) {
         return (
