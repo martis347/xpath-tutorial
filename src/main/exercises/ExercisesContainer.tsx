@@ -1,28 +1,25 @@
 import React, { useEffect, useMemo } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import ExercisesList from './exercises-list';
+import exercisesList from './exercises-list';
+import BaseExercise from './exercises-list/BaseExercise';
 
 const ExercisesContainer = () => {
   const { exerciseId } = useParams<{ exerciseId: string }>();
   const history = useHistory();
 
-  const Exercise = useMemo(() => ExercisesList[exerciseId], [exerciseId]);
+  const exercise = useMemo(() => exercisesList[exerciseId], [exerciseId]);
 
   useEffect(() => {
-    if (!Exercise) {
+    if (!exercise) {
       history.push(`/exercises/1`);
     }
-  }, [Exercise, history]);
+  }, [exercise, history]);
 
-  if (!Exercise) {
+  if (!exercise) {
     return null;
   }
 
-  return (
-    <div style={{ flex: 4 }}>
-      <Exercise />
-    </div>
-  );
+  return <BaseExercise {...exercise} />;
 };
 
 export default ExercisesContainer;

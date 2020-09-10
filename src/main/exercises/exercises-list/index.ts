@@ -1,12 +1,21 @@
-import React from 'react';
-import Exercise1 from './Exercise1';
-import Exercise2 from './Exercise2';
-import Exercise3 from './Exercise3';
-import Exercise4 from './Exercise4';
+/* eslint-disable */
 
-export default {
-  '1': Exercise1,
-  '2': Exercise2,
-  '3': Exercise3,
-  '4': Exercise4,
-} as { [name: string]: () => React.ReactElement };
+import { ExerciceData } from './BaseExercise';
+
+export const extractExercises = (req: any) => {
+  return req
+    .keys()
+    .filter((k: any) => !k.includes('index.ts') && !k.includes('BaseExercise.tsx'))
+    .reduce((acc: any, key: any) => {
+      const data: ExerciceData = req(key).default;
+      const exerciseId = data.id;
+
+      return {
+        [exerciseId]: data,
+        ...acc,
+      };
+    }, {}) as { [key: string]: ExerciceData };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default extractExercises((require as any).context('./', false, /.tsx/));

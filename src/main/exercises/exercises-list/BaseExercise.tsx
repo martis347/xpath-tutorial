@@ -3,9 +3,22 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
+const StyledSummary = styled.summary`
+  max-width: 800px;
+  white-space: pre-line;
+
+  ul {
+    margin: auto;
+    margin-block-end: -2em;
+  }
+`;
+
 const StyledWrapper = styled.div`
   padding-left: 8px;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  overflow: auto;
+  flex: 4;
+  height: calc(100vh - 81px);
 `;
 
 const Divider = styled.div`
@@ -22,7 +35,9 @@ const NextExerciseButton = styled.button`
   border-radius: 4px;
   color: white;
 
-  ${props => !props.disabled ? `
+  ${(props) =>
+    !props.disabled
+      ? `
     background: rgba(178, 34, 34, 0.9);
     cursor: pointer;
     
@@ -32,7 +47,8 @@ const NextExerciseButton = styled.button`
     :active {
       background: rgba(178, 34, 34, 0.8);
     }
-  ` : `
+  `
+      : `
     background: rgba(178, 34, 34, 0.3);
   `}
 `;
@@ -49,7 +65,7 @@ const StyledInput = styled.input`
 `;
 
 const ProxyWrapper = styled.div`
-  margin-left: -14px;
+  border-left: 4px solid firebrick;
 
   * {
     margin-top: 3px;
@@ -57,6 +73,7 @@ const ProxyWrapper = styled.div`
     margin-left: 14px;
     padding: 2px;
     display: block;
+    border-radius: 8px;
   }
 
   [expected] {
@@ -64,23 +81,24 @@ const ProxyWrapper = styled.div`
   }
 
   *:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   .selected {
     background: rgba(0, 0, 0, 0.1);
   }
 
-  .selected-single[expected] {
+  .selected-expected {
     background: rgba(0, 255, 0, 0.3);
   }
 `;
 
 export interface ExerciceData {
-  name: string;
+  id: string;
+  title: string;
   description: string;
-  nextLessonId: string;
-  component: JSX.Element;
+  nextExerciseId?: string;
+  component?: JSX.Element;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,30 +106,34 @@ const mapAttributes = (props: any) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children, ref, expected, ...validProps } = props;
 
-  return Object.entries(validProps).map(([key, value]) => {
+  const result = Object.entries(validProps).map(([key, value]) => {
     const keyToUse = key === 'className' ? 'class' : key;
     return `${keyToUse}="${value}" `;
   });
+
+  return result.length > 0 ? ` ${result}` : '';
 };
 
 const renderProxy = (
   component: React.ReactElement,
-  index?: number,
+  index: string,
   ref?: React.MutableRefObject<Element | null>,
 ): React.ReactElement => {
   if (typeof component === 'string') {
     return component;
   }
   let children: unknown[] = [];
-  const opening = `<${component.type} ${mapAttributes(component.props)}>`;
+  const opening = `<${component.type}${mapAttributes(component.props)}>`;
   const closing = `</${component.type}>`;
 
   if (Array.isArray(component.props?.children)) {
     children = [
-      ...component.props.children.map((c: React.ReactElement, i: number) => renderProxy(c, i)),
+      ...component.props.children.map((c: React.ReactElement, i: number) =>
+        renderProxy(c, `${index}-${i}`),
+      ),
     ];
   } else if (component.props?.children) {
-    children = [renderProxy(component.props.children)];
+    children = [renderProxy(component.props.children, `child-${index}`)];
   } else {
     children = [];
   }
@@ -125,7 +147,7 @@ const renderProxy = (
   });
 };
 
-const BaseExercise = ({ name, description, nextLessonId, component }: ExerciceData) => {
+const BaseExercise = ({ title, description, nextExerciseId, component, id }: ExerciceData) => {
   const history = useHistory();
   const [xpath, setXpath] = useState('');
   const [selectedNodes, setSelectedNodes] = useState<HTMLElement[]>([]);
@@ -162,7 +184,7 @@ const BaseExercise = ({ name, description, nextLessonId, component }: ExerciceDa
     }
 
     element.classList.remove('selected');
-    element.classList.remove('selected-single');
+    element.classList.remove('selected-expected');
   }, []);
 
   const handleNextExercise = useCallback(() => {
@@ -170,7 +192,7 @@ const BaseExercise = ({ name, description, nextLessonId, component }: ExerciceDa
       return;
     }
 
-    history.push(`/exercises/${nextLessonId}`)
+    history.push(`/exercises/${nextExerciseId}`);
   }, [foundSelected]);
 
   useEffect(() => {
@@ -178,41 +200,50 @@ const BaseExercise = ({ name, description, nextLessonId, component }: ExerciceDa
       removeSelectedClassNames(proxyRef.current);
     }
 
+    const expectedItems = Array.from(proxyRef.current?.querySelectorAll('[expected]') || []);
+    let selectedExpectedCount = 0;
     for (const selectedNode of selectedNodes) {
       selectedNode.classList.add('selected');
-    }
-
-    if (selectedNodes.length === 1) {
-      selectedNodes[0].classList.add('selected-single');
-
-      if (selectedNodes[0].classList.contains('selected-single') && selectedNodes[0].attributes.getNamedItem('expected')) {
-        setFoundSelected(true)
-        return;
+      if (expectedItems.includes(selectedNode)) {
+        selectedExpectedCount++;
       }
     }
 
-    setFoundSelected(false)
+    if (
+      expectedItems.length === selectedExpectedCount &&
+      selectedNodes.length === selectedExpectedCount
+    ) {
+      for (const selectedNode of selectedNodes) {
+        selectedNode.classList.add('selected-expected');
+      }
+      setFoundSelected(true);
+    } else {
+      setFoundSelected(false);
+    }
   }, [removeSelectedClassNames, selectedNodes]);
 
   return (
-    <StyledWrapper>
-      <h1>{name}</h1>
-      <summary dangerouslySetInnerHTML={{ __html: description}}/>
-      <Divider/>
-      <ProxyWrapper>
-        {renderProxy(component,          0,          proxyRef,
-        )}
-      </ProxyWrapper>
-      <Divider/>
-      <StyledInput
-        type='text'
-        placeholder='Enter the XPath here'
-        value={xpath}
-        onChange={({ target: { value } }) => setXpath(value)}
-      />
-      <NextExerciseButton disabled={!foundSelected} onClick={handleNextExercise}>
-        Next exercise
-      </NextExerciseButton>
+    <StyledWrapper key={id}>
+      <h1>{title}</h1>
+      <StyledSummary dangerouslySetInnerHTML={{ __html: description }} />
+      {component && (
+        <>
+          <Divider />
+          <ProxyWrapper>{renderProxy(component, '0', proxyRef)}</ProxyWrapper>
+          <Divider />
+          <StyledInput
+            type='text'
+            placeholder='Enter the XPath here'
+            value={xpath}
+            onChange={({ target: { value } }) => setXpath(value)}
+          />
+        </>
+      )}
+      {nextExerciseId && (
+        <NextExerciseButton disabled={!foundSelected} onClick={handleNextExercise}>
+          Next exercise
+        </NextExerciseButton>
+      )}
     </StyledWrapper>
   );
 };

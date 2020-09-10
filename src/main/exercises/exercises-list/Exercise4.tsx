@@ -1,34 +1,34 @@
 import React from 'react';
-import BaseExercise, { ExerciceData } from './BaseExercise';
+import { ExerciceData } from './BaseExercise';
 
 const exerciceData: ExerciceData = {
-  name: 'Last two lessons combined',
+  id: '4',
+  title: 'Last two exercises combined',
   description: `You can select an element within another element, that has a specific attribute value.
-<br/>
-To complete this exercise select <b>The price of a book named "hamlet" in bookstore named "vaga"</b>.
+To complete this exercise select <b>The price of a book named "Hamlet" in bookstore named "vaga"</b>.
 `,
-  nextLessonId: '5',
+  nextExerciseId: '5',
   component: (
     <city>
       <bookstore name='vaga'>
+        <book name='The Alchemist'>
+          <author>Paulo Coelho</author>
+          <price>25</price>
+        </book>
         <book name='Hamlet'>
           <author>William Shakespeare</author>
-          <price>17</price>
+          <price expected='true'>17</price>
         </book>
         <author>James Patterson</author>
       </bookstore>
       <bookstore name='pegasas'>
-        <book name='hamlet'>
+        <book name='Hamlet'>
           <author>William Shakespeare</author>
-          <price expected='true'>20</price>
+          <price>20</price>
         </book>
       </bookstore>
     </city>
   ),
 };
 
-const Exercise = () => {
-  return <BaseExercise {...exerciceData} />;
-};
-
-export default Exercise;
+export default exerciceData;

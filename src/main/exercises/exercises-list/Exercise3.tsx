@@ -1,10 +1,10 @@
 import React from 'react';
-import BaseExercise, { ExerciceData } from './BaseExercise';
+import { ExerciceData } from './BaseExercise';
 
 const exerciceData: ExerciceData = {
-  name: 'Selecting using an attribute',
+  id: '3',
+  title: 'Selecting using an attribute',
   description: `You can select an element not only by name (bookstore, book, author), but also by using <b>attributes of this element</b>.
-<br/>
 To do that - you can use the attribute selector on XPath. It looks like that: <code>//elementToSelect[@attributeName="attributeValue"]</code>, where:
 <ul>
   <li><code>elementToSelect</code> - the element you're selecting, like book or an author</li>
@@ -13,7 +13,7 @@ To do that - you can use the attribute selector on XPath. It looks like that: <c
 </ul>
 To complete this exercise select <b>an author with an age of 55</b>.
 `,
-  nextLessonId: '4',
+  nextExerciseId: '4',
   component: (
     <bookstore>
       <book language='en'>
@@ -37,8 +37,4 @@ To complete this exercise select <b>an author with an age of 55</b>.
   ),
 };
 
-const Exercise = () => {
-  return <BaseExercise {...exerciceData} />;
-};
-
-export default Exercise;
+export default exerciceData;

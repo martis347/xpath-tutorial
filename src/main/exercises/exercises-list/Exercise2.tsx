@@ -1,8 +1,9 @@
 import React from 'react';
-import BaseExercise, { ExerciceData } from './BaseExercise';
+import { ExerciceData } from './BaseExercise';
 
 const exerciceData: ExerciceData = {
-  name: 'How does a selector work?',
+  id: '2',
+  title: 'How does a selector work?',
   description: `You can select one or more elements using XPath. Your current selection will be highlighted in the list of elements.
 You can try it out by selecting:
 <ul>
@@ -11,10 +12,9 @@ You can try it out by selecting:
   <li>all authors with <code>//author</code>, </li>
 </ul>
 You can also select an element within an element. For example you can select an author, that belongs to a book by using <code>//book/author</code>.
-<br/>
 To complete this exercise select <b>the author, that belongs to the bookstore</b> (does not belong to a book).
 `,
-  nextLessonId: '3',
+  nextExerciseId: '3',
   component: (
     <bookstore>
       <book>
@@ -34,8 +34,4 @@ To complete this exercise select <b>the author, that belongs to the bookstore</b
   ),
 };
 
-const Exercise = () => {
-  return <BaseExercise {...exerciceData} />;
-};
-
-export default Exercise;
+export default exerciceData;

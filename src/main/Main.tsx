@@ -6,6 +6,7 @@ import Navigation from './navigation/Navigation';
 import TopBar from './top-bar/TopBar';
 import ExercisesContainer from './exercises/ExercisesContainer';
 import { NavigationItem } from './types';
+import exercisesList from './exercises/exercises-list';
 
 WebFontLoader.load({ google: { families: ['Hind:100,300,400,500,700,900'] } });
 const GlobalStyle = createGlobalStyle`
@@ -24,24 +25,10 @@ const ContentWrapper = styled.div`
   display: flex;
 `;
 
-const Exercises: NavigationItem[] = [
-  {
-    name: 'Introduction',
-  },
-  {
-    name: 'How does a selector work?',
-  },
-  {
-    name: 'Selecting using an attribute',
-  },
-  {
-    name: 'Last two lessons combined',
-  },
-  {
-    name: 'Relative select vs absolute select',
-  },
-];
-
+const mappedExercises = Object.values(exercisesList).map<NavigationItem>((e) => ({
+  name: e.title,
+  id: e.id,
+}));
 const Main = () => {
   return (
     <Router>
@@ -50,7 +37,7 @@ const Main = () => {
       <ContentWrapper>
         <Switch>
           <Route path='/exercises/:exerciseId'>
-            <Navigation exercises={Exercises} />
+            <Navigation exercises={mappedExercises} />
             <ExercisesContainer />
           </Route>
           <Redirect to='/exercises/1' />
