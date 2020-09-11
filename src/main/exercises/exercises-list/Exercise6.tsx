@@ -3,43 +3,41 @@ import { ExerciceData } from './BaseExercise';
 
 const exerciceData: ExerciceData = {
   id: '6',
-  title: 'Predicates',
-  description: `In some previous exercises we selected elements using an attribute selector <code>//element[@attribute="value"]</code>.
-This selector is called a <code>Predicate</code> and as you might have guessed - there are more.
+  title: 'Unknown elements',
+  description: `Sometimes you might need to select multiple elements, that are of different types or you don't know the type of.
+To achieve that, the name of the element can be replaced with <code>*</code>.
+The very same logic also applies for attributes - you can replace name of any attribute with a <code>*</code>. Some examples:
 <ul>
-  <li>Selecting a specific element in a list <code>//book[3]</code>. The first element in an array is selected with <code>1</code></li>
-  <li>Selecting the <b>last</b> element in a list <code>//book[last()]</code>. </li>
-  <li>Selecting a specific element in a list <code>//book[3]</code> starting from last element <code>//book[last() - 2]</code></li>
-  <li>Selecting the <b>last N</b> elements or the <b>first N</b> elements <code>//book[position() > 3]</code>, <code>//book[position() < 3]</code></li>
+  <li><code>//*</code> - will select all elements in the document</li>
+  <li><code>//bookstore/*</code> - will select all child elements of bookstore, no matter the type</li>
+  <li><code>//bookstore//*</code> - will select all descending elements of bookstore, no matter the type</li>
+  <li><code>//*[@*="20"]</code> - will select all elements that have an attribute value of <code>20</code></li>
 </ul>
-
-To complete this exercise select the last authors of the first three books.
+To complete this exercise select author with an age of 20 and a book with a price of 20 (but not the pages with a length of 20).
 `,
   nextExerciseId: '7',
   component: (
     <bookstore>
-      <book>
+      <book price='17'>
         <author>Enid Blyton</author>
-        <author expected='true'>Barbara Cartland</author>
+        <pages length='99' />
       </book>
-      <book>
+      <book expected='true' price='20'>
         <author>Sidney Sheldon</author>
-        <author expected='true'>Danielle Steel</author>
+        <pages length='75' />
       </book>
-      <book>
-        <author>J. K. Rowling</author>
-        <author>Eiichiro Oda</author>
-        <author expected='true'>Harold Robbins</author>
+      <book price='14'>
+        <author>Sidney Sheldon</author>
+        <pages length='40' />
       </book>
-      <book>
-        <author>William Shakespeare</author>
+      <book price='25'>
+        <author>Sidney Sheldon</author>
+        <pages length='20' />
       </book>
-      <book>
-        <author>Paulo Coelho</author>
-      </book>
-      <book>
-        <author>Agatha Christie</author>
-      </book>
+      <author expected='true' age='20'>
+        Sidney Sheldon
+      </author>
+      <author age='40'>Enid Blyton</author>
     </bookstore>
   ),
 };

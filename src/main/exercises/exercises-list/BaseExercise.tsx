@@ -30,10 +30,11 @@ const Divider = styled.div`
 const NextExerciseButton = styled.button`
   margin-top: 8px;
   border: none;
-  padding: 4px;
+  padding: 8px;
   outline: none;
   border-radius: 4px;
   color: white;
+  font-size: 16px;
 
   ${(props) =>
     !props.disabled
@@ -122,26 +123,30 @@ const renderProxy = (
   if (typeof component === 'string') {
     return component;
   }
-  let children: unknown[] = [];
+  let innerChildren: unknown[] = [];
   const opening = `<${component.type}${mapAttributes(component.props)}>`;
   const closing = `</${component.type}>`;
 
   if (Array.isArray(component.props?.children)) {
-    children = [
+    innerChildren = [
       ...component.props.children.map((c: React.ReactElement, i: number) =>
         renderProxy(c, `${index}-${i}`),
       ),
     ];
   } else if (component.props?.children) {
-    children = [renderProxy(component.props.children, `child-${index}`)];
+    innerChildren = [renderProxy(component.props.children, `child-${index}`)];
   } else {
-    children = [];
+    innerChildren = [];
   }
 
+  let children = [opening, ...innerChildren, closing];
+  if (children.every((c) => typeof c === 'string')) {
+    children = [children.join(' ')];
+  }
   // eslint-disable-next-line react/no-children-prop
   return React.createElement(component.type, {
     ...component.props,
-    children: [opening, ...children, closing],
+    children,
     ref,
     key: index,
   });

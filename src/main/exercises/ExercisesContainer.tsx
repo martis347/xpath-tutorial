@@ -19,7 +19,7 @@ const ExercisesContainer = () => {
     return null;
   }
 
-  return <BaseExercise {...exercise} />;
+  return <BaseExercise key={exercise.id} {...exercise} />;
 };
 
 export default ExercisesContainer;
