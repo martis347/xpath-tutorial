@@ -18,7 +18,7 @@ The answer is simple - using an <b>Absolute</b> select you get <b>any</b> elemen
 In the given structure try writing a selector <code>//bookstore[@city="Kaunas"]<b>/</b>author</code> - only <b>Direct children</b> of bookstore will be selected.
 However, if you'll try writing a selector <code>//bookstore[@city="Kaunas"]<b>//</b>author</code> - all authors <b>no matter how deep they are</b> in bookstore of Kaunas will be selected.
 
-To complete this exercise select <b>only</b> Chapter 1 of book "The Alchemist" in "Kaunas" bookstore.
+To complete this exercise select <b>all</b> Chapters of book "The Alchemist" in "Kaunas" bookstore.
 `,
   nextExerciseId: '6',
   component: (
@@ -34,7 +34,7 @@ To complete this exercise select <b>only</b> Chapter 1 of book "The Alchemist" i
         <book name='The Alchemist'>
           <author>Paulo Coelho</author>
           <chapter expected='true'>
-            Chapter 1<chapter>Sub-Chapter 1</chapter>
+            Chapter 1<chapter expected='true'>Sub-Chapter 1</chapter>
           </chapter>
         </book>
         <book name='XPath Basics'>
