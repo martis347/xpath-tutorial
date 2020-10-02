@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import xpathImage from './xpath.png';
 
 const StyledWrapper = styled.div`
   padding: 8px;
@@ -19,7 +20,7 @@ const Title = styled.span`
 const TopBar = () => {
   return (
     <StyledWrapper>
-      <img src='/xpath.png' />
+      <img src={xpathImage} />
       <Title>XPath Tutorial</Title>
     </StyledWrapper>
   );

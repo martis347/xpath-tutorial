@@ -31,7 +31,7 @@ const mappedExercises = Object.values(exercisesList).map<NavigationItem>((e) => 
 }));
 const Main = () => {
   return (
-    <Router>
+    <Router basename='xpath-tutorial'>
       <GlobalStyle />
       <TopBar />
       <ContentWrapper>
